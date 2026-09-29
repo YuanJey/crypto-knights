@@ -1,0 +1,851 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crypto-knights.local/schemas/macro-risk-report.v1.json",
+  "title": "Crypto Knights Macro Risk Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "generated_at",
+    "as_of",
+    "window",
+    "scope",
+    "defaults_applied",
+    "data_quality",
+    "sources",
+    "events",
+    "market_regime",
+    "signals",
+    "position_risks",
+    "contradictions",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "macro-risk.v1"
+    },
+    "report_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "as_of": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "window": {
+      "$ref": "#/$defs/timeWindow"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assets",
+        "horizons"
+      ],
+      "properties": {
+        "assets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/asset"
+          }
+        },
+        "horizons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/horizon"
+          }
+        }
+      }
+    },
+    "defaults_applied": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "data_quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "coverage_ratio",
+        "freshness_seconds",
+        "source_counts",
+        "limitations"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "insufficient",
+            "stale"
+          ]
+        },
+        "coverage_ratio": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "freshness_seconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "source_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tier_a",
+            "tier_b",
+            "tier_c",
+            "tier_d"
+          ],
+          "properties": {
+            "tier_a": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "tier_b": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "tier_c": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "tier_d": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "market_regime": {
+      "$ref": "#/$defs/marketRegime"
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/signal"
+      }
+    },
+    "position_risks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/positionRisk"
+      }
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contradiction"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "facts",
+        "inferences",
+        "decision"
+      ],
+      "properties": {
+        "facts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "inferences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "decision": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "asset": {
+      "type": "string",
+      "pattern": "^[A-Z0-9][A-Z0-9._-]{1,19}$"
+    },
+    "horizon": {
+      "enum": [
+        "intraday",
+        "1d",
+        "7d",
+        "30d",
+        "90d"
+      ]
+    },
+    "timeWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "end": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "url",
+        "publisher",
+        "title",
+        "tier",
+        "source_type",
+        "published_at",
+        "retrieved_at",
+        "excerpt",
+        "supports_event_ids",
+        "contradicts_event_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tier": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ]
+        },
+        "source_type": {
+          "enum": [
+            "official",
+            "wire",
+            "financial_press",
+            "mainstream_press",
+            "specialist",
+            "social",
+            "market_data",
+            "on_chain"
+          ]
+        },
+        "published_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retrieved_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "excerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supports_event_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "contradicts_event_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "canonical_key",
+        "title",
+        "category",
+        "secondary_tags",
+        "status",
+        "published_at",
+        "occurred_at",
+        "observed_at",
+        "effective_horizons",
+        "fact_claims",
+        "inferences",
+        "source_ids",
+        "impacts"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonical_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "$ref": "#/$defs/category"
+        },
+        "secondary_tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "status": {
+          "enum": [
+            "scheduled",
+            "confirmed",
+            "developing",
+            "disputed",
+            "retracted"
+          ]
+        },
+        "published_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "occurred_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "effective_horizons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/horizon"
+          }
+        },
+        "fact_claims": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/factClaim"
+          }
+        },
+        "inferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/inference"
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "impacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/eventImpact"
+          }
+        }
+      }
+    },
+    "category": {
+      "enum": [
+        "monetary_policy",
+        "inflation_growth_labor",
+        "liquidity_credit",
+        "fiscal_policy",
+        "regulation_legal",
+        "geopolitics_security",
+        "crypto_systemic"
+      ]
+    },
+    "factClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "source_ids"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "inference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "transmission_path"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "transmission_path": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "eventImpact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset",
+        "horizon",
+        "direction",
+        "severity",
+        "relevance",
+        "confidence",
+        "freshness",
+        "score"
+      ],
+      "properties": {
+        "asset": {
+          "$ref": "#/$defs/asset"
+        },
+        "horizon": {
+          "$ref": "#/$defs/horizon"
+        },
+        "direction": {
+          "type": "integer",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "severity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "relevance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "freshness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "score": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -100,
+          "maximum": 100
+        }
+      }
+    },
+    "marketRegime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "risk_state",
+        "liquidity",
+        "volatility",
+        "confidence",
+        "rationale_event_ids"
+      ],
+      "properties": {
+        "risk_state": {
+          "enum": [
+            "risk_on",
+            "risk_off",
+            "mixed",
+            "unclear"
+          ]
+        },
+        "liquidity": {
+          "enum": [
+            "easing",
+            "tightening",
+            "neutral",
+            "unclear"
+          ]
+        },
+        "volatility": {
+          "enum": [
+            "expanding",
+            "contracting",
+            "stable",
+            "unclear"
+          ]
+        },
+        "confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "rationale_event_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "asset",
+        "horizon",
+        "direction",
+        "score",
+        "confidence",
+        "category_weights",
+        "event_ids",
+        "rationale",
+        "invalidation_conditions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "asset": {
+          "$ref": "#/$defs/asset"
+        },
+        "horizon": {
+          "$ref": "#/$defs/horizon"
+        },
+        "direction": {
+          "enum": [
+            "bearish",
+            "neutral",
+            "bullish",
+            "unclear"
+          ]
+        },
+        "score": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -100,
+          "maximum": 100
+        },
+        "confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "category_weights": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "event_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invalidation_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "positionRisk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "position_ref",
+        "asset",
+        "side",
+        "assessment_status",
+        "posture",
+        "urgency",
+        "eligible",
+        "requires_human_approval",
+        "confidence",
+        "rationale",
+        "trigger_conditions",
+        "invalidation_conditions",
+        "signal_ids",
+        "event_ids",
+        "missing_inputs",
+        "next_review_at"
+      ],
+      "properties": {
+        "position_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "asset": {
+          "$ref": "#/$defs/asset"
+        },
+        "side": {
+          "enum": [
+            "long",
+            "short",
+            "flat",
+            "unknown"
+          ]
+        },
+        "assessment_status": {
+          "enum": [
+            "complete",
+            "incomplete"
+          ]
+        },
+        "posture": {
+          "enum": [
+            "monitor",
+            "hold",
+            "reduce",
+            "hedge",
+            "close",
+            "review"
+          ]
+        },
+        "urgency": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        "eligible": {
+          "const": false
+        },
+        "requires_human_approval": {
+          "const": true
+        },
+        "confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trigger_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "invalidation_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "signal_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "event_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "missing_inputs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "next_review_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "contradiction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "topic",
+        "source_ids",
+        "effect_on_confidence",
+        "resolution"
+      ],
+      "properties": {
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "effect_on_confidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution": {
+          "enum": [
+            "unresolved",
+            "partially_resolved",
+            "resolved"
+          ]
+        }
+      }
+    }
+  }
+}

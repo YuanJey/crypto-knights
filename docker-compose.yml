@@ -1,0 +1,41 @@
+services:
+  macro-service:
+    build:
+      context: ./services/macro-service
+    environment:
+      HTTP_ADDR: ":8081"
+    ports:
+      - "8081:8081"
+
+  options-service:
+    build:
+      context: ./services/options-service
+    environment:
+      HTTP_ADDR: ":8082"
+      MIN_PREMIUM_NOTIONAL: "100000"
+      MAX_KEY_LEVELS: "10"
+    ports:
+      - "8082:8082"
+
+  execution-service:
+    build:
+      context: ./services/execution-service
+    environment:
+      HTTP_ADDR: ":8084"
+      EXCHANGE_MODE: "paper"
+      ALLOWED_SYMBOLS: "BTCUSDT,ETHUSDT"
+      MAX_ORDER_NOTIONAL: "10000"
+      MAX_TRIGGER_AGE_SECONDS: "30"
+    ports:
+      - "8084:8084"
+
+  trigger-service:
+    build:
+      context: ./services/trigger-service
+    depends_on:
+      - execution-service
+    environment:
+      HTTP_ADDR: ":8083"
+      EXECUTION_SERVICE_URL: "http://execution-service:8084"
+    ports:
+      - "8083:8083"

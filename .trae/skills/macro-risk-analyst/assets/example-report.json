@@ -1,0 +1,197 @@
+{
+  "schema_version": "macro-risk.v1",
+  "report_id": "example-report",
+  "generated_at": "2026-01-01T00:05:00Z",
+  "as_of": "2026-01-01T00:00:00Z",
+  "window": {
+    "start": "2025-12-31T00:00:00Z",
+    "end": "2026-01-01T00:00:00Z"
+  },
+  "scope": {
+    "assets": [
+      "BTC",
+      "ETH"
+    ],
+    "horizons": [
+      "1d"
+    ]
+  },
+  "defaults_applied": [
+    "Example fixture only; no live market assessment"
+  ],
+  "data_quality": {
+    "status": "insufficient",
+    "coverage_ratio": null,
+    "freshness_seconds": 300,
+    "source_counts": {
+      "tier_a": 1,
+      "tier_b": 0,
+      "tier_c": 0,
+      "tier_d": 0
+    },
+    "limitations": [
+      "Synthetic fixture used only for schema validation"
+    ]
+  },
+  "sources": [
+    {
+      "id": "src-example-1",
+      "url": "https://example.com/official-release",
+      "publisher": "Example Authority",
+      "title": "Illustrative policy decision",
+      "tier": "A",
+      "source_type": "official",
+      "published_at": "2025-12-31T23:00:00Z",
+      "retrieved_at": "2026-01-01T00:00:00Z",
+      "excerpt": "Synthetic source text for contract validation.",
+      "supports_event_ids": [
+        "evt-example-1"
+      ],
+      "contradicts_event_ids": []
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-example-1",
+      "canonical_key": "monetary_policy|example_authority|decision|policy|2025-12-31",
+      "title": "Illustrative policy event",
+      "category": "monetary_policy",
+      "secondary_tags": [],
+      "status": "confirmed",
+      "published_at": "2025-12-31T23:00:00Z",
+      "occurred_at": "2025-12-31T23:00:00Z",
+      "observed_at": "2026-01-01T00:00:00Z",
+      "effective_horizons": [
+        "1d"
+      ],
+      "fact_claims": [
+        {
+          "statement": "A synthetic policy event was published.",
+          "source_ids": [
+            "src-example-1"
+          ]
+        }
+      ],
+      "inferences": [
+        {
+          "statement": "The fixture models a neutral one-day crypto impact.",
+          "transmission_path": [
+            "policy expectations",
+            "system liquidity",
+            "crypto risk appetite"
+          ]
+        }
+      ],
+      "source_ids": [
+        "src-example-1"
+      ],
+      "impacts": [
+        {
+          "asset": "BTC",
+          "horizon": "1d",
+          "direction": 0,
+          "severity": 1,
+          "relevance": 0.5,
+          "confidence": 0.8,
+          "freshness": 1,
+          "score": 0
+        },
+        {
+          "asset": "ETH",
+          "horizon": "1d",
+          "direction": 0,
+          "severity": 1,
+          "relevance": 0.5,
+          "confidence": 0.8,
+          "freshness": 1,
+          "score": 0
+        }
+      ]
+    }
+  ],
+  "market_regime": {
+    "risk_state": "unclear",
+    "liquidity": "unclear",
+    "volatility": "unclear",
+    "confidence": null,
+    "rationale_event_ids": [
+      "evt-example-1"
+    ]
+  },
+  "signals": [
+    {
+      "id": "sig-btc-1d",
+      "asset": "BTC",
+      "horizon": "1d",
+      "direction": "neutral",
+      "score": 0,
+      "confidence": 0.8,
+      "category_weights": {
+        "monetary_policy": 1
+      },
+      "event_ids": [
+        "evt-example-1"
+      ],
+      "rationale": "Synthetic neutral signal for schema validation.",
+      "invalidation_conditions": [
+        "Replace the fixture with live evidence before making a decision."
+      ]
+    },
+    {
+      "id": "sig-eth-1d",
+      "asset": "ETH",
+      "horizon": "1d",
+      "direction": "neutral",
+      "score": 0,
+      "confidence": 0.8,
+      "category_weights": {
+        "monetary_policy": 1
+      },
+      "event_ids": [
+        "evt-example-1"
+      ],
+      "rationale": "Synthetic neutral signal for schema validation.",
+      "invalidation_conditions": [
+        "Replace the fixture with live evidence before making a decision."
+      ]
+    }
+  ],
+  "position_risks": [
+    {
+      "position_ref": "position-not-provided",
+      "asset": "BTC",
+      "side": "unknown",
+      "assessment_status": "incomplete",
+      "posture": "review",
+      "urgency": "low",
+      "eligible": false,
+      "requires_human_approval": true,
+      "confidence": null,
+      "rationale": "Position details were not supplied.",
+      "trigger_conditions": [],
+      "invalidation_conditions": [],
+      "signal_ids": [
+        "sig-btc-1d"
+      ],
+      "event_ids": [
+        "evt-example-1"
+      ],
+      "missing_inputs": [
+        "side",
+        "size",
+        "risk limits"
+      ],
+      "next_review_at": null
+    }
+  ],
+  "contradictions": [],
+  "summary": {
+    "facts": [
+      "This file contains synthetic data only."
+    ],
+    "inferences": [
+      "No live market inference can be drawn from this fixture."
+    ],
+    "decision": "Use the fixture only to validate the output contract."
+  }
+}
