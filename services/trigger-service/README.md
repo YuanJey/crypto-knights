@@ -12,6 +12,9 @@ For a long rule:
 A short rule is symmetric and tracks the highest price before falling by the
 configured retracement.
 
+The complete timing, boundary, and state-machine contract is documented in
+[`specs/tracking-entry-trigger.md`](../../specs/tracking-entry-trigger.md).
+
 ## Run
 
 Start the execution service first, then:
