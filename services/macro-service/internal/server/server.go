@@ -6,22 +6,27 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 
+	"github.com/YuanJey/crypto-knights/services/macro-service/internal/news"
 	"github.com/YuanJey/crypto-knights/services/macro-service/internal/report"
 )
 
 const maxReportBytes int64 = 4 << 20
 
 type Server struct {
-	store *report.Store
-	mux   *http.ServeMux
+	store       *report.Store
+	newsManager *news.Manager
+	mux         *http.ServeMux
 }
 
-func New(store *report.Store) *Server {
+func New(store *report.Store, newsManager *news.Manager) *Server {
 	server := &Server{
-		store: store,
-		mux:   http.NewServeMux(),
+		store:       store,
+		newsManager: newsManager,
+		mux:         http.NewServeMux(),
 	}
 	server.routes()
 	return server
@@ -42,6 +47,9 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("GET /v1/reports/latest", s.latestReport)
 	s.mux.HandleFunc("GET /v1/reports/{id}", s.getReport)
 	s.mux.HandleFunc("GET /v1/signals/latest", s.latestSignals)
+	s.mux.HandleFunc("GET /v1/news", s.listNews)
+	s.mux.HandleFunc("GET /v1/news/sources", s.listNewsSources)
+	s.mux.HandleFunc("POST /v1/news/refresh", s.refreshNews)
 }
 
 func (s *Server) createReport(w http.ResponseWriter, r *http.Request) {
@@ -103,6 +111,58 @@ func (s *Server) latestSignals(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]any{"signals": signals})
+}
+
+func (s *Server) listNews(w http.ResponseWriter, r *http.Request) {
+	limit := 100
+	if raw := strings.TrimSpace(r.URL.Query().Get("limit")); raw != "" {
+		parsed, err := strconv.Atoi(raw)
+		if err != nil || parsed < 1 || parsed > 500 {
+			writeError(w, http.StatusBadRequest, "limit must be between 1 and 500")
+			return
+		}
+		limit = parsed
+	}
+
+	var since *time.Time
+	if raw := strings.TrimSpace(r.URL.Query().Get("since")); raw != "" {
+		parsed, err := time.Parse(time.RFC3339, raw)
+		if err != nil {
+			writeError(w, http.StatusBadRequest, "since must be an RFC3339 timestamp")
+			return
+		}
+		parsed = parsed.UTC()
+		since = &parsed
+	}
+
+	tier := strings.ToUpper(strings.TrimSpace(r.URL.Query().Get("tier")))
+	if tier != "" && tier != "A" && tier != "B" && tier != "C" && tier != "D" {
+		writeError(w, http.StatusBadRequest, "tier must be A, B, C, or D")
+		return
+	}
+	articles := s.newsManager.Articles(news.ListFilter{
+		SourceID: strings.ToLower(strings.TrimSpace(r.URL.Query().Get("source_id"))),
+		Tier:     tier,
+		Since:    since,
+		Limit:    limit,
+	})
+	writeJSON(w, http.StatusOK, map[string]any{
+		"count": len(articles),
+		"items": articles,
+	})
+}
+
+func (s *Server) listNewsSources(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{
+		"sources": s.newsManager.Sources(),
+	})
+}
+
+func (s *Server) refreshNews(w http.ResponseWriter, r *http.Request) {
+	refreshed := s.newsManager.RefreshDue(r.Context())
+	writeJSON(w, http.StatusOK, map[string]any{
+		"refreshed": refreshed,
+	})
 }
 
 func writeJSON(w http.ResponseWriter, status int, value any) {

@@ -8,7 +8,7 @@ There are no shared internal Go packages between services.
 
 | Service | Directory | Default port | Responsibility |
 | --- | --- | --- | --- |
-| Macro | `services/macro-service` | `8081` | Accept and expose validated `macro-risk.v1` Agent reports |
+| Macro | `services/macro-service` | `8081` | Collect tiered free news feeds and expose validated `macro-risk.v1` Agent reports |
 | Options | `services/options-service` | `8082` | Ingest option trades and aggregate large-premium direction |
 | Trigger | `services/trigger-service` | `8083` | Track price conditions and dispatch eligible entry triggers |
 | Execution | `services/execution-service` | `8084` | Enforce execution policy and place idempotent paper orders |

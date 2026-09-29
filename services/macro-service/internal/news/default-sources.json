@@ -1,0 +1,117 @@
+{
+  "sources": [
+    {
+      "id": "federal-reserve",
+      "name": "Federal Reserve",
+      "kind": "rss",
+      "tier": "A",
+      "source_type": "official",
+      "url": "https://www.federalreserve.gov/feeds/press_all.xml",
+      "language": "en",
+      "country": "US",
+      "poll_interval_seconds": 30,
+      "max_items": 100,
+      "enabled": true
+    },
+    {
+      "id": "ecb",
+      "name": "European Central Bank",
+      "kind": "rss",
+      "tier": "A",
+      "source_type": "official",
+      "url": "https://www.ecb.europa.eu/rss/press.html",
+      "language": "en",
+      "country": "EU",
+      "poll_interval_seconds": 60,
+      "max_items": 100,
+      "enabled": true
+    },
+    {
+      "id": "bea",
+      "name": "US Bureau of Economic Analysis",
+      "kind": "rss",
+      "tier": "A",
+      "source_type": "official",
+      "url": "https://apps.bea.gov/rss/rss.xml",
+      "language": "en",
+      "country": "US",
+      "poll_interval_seconds": 300,
+      "max_items": 100,
+      "enabled": true
+    },
+    {
+      "id": "sec",
+      "name": "US Securities and Exchange Commission",
+      "kind": "rss",
+      "tier": "A",
+      "source_type": "official",
+      "url": "https://www.sec.gov/news/pressreleases.rss",
+      "language": "en",
+      "country": "US",
+      "poll_interval_seconds": 60,
+      "max_items": 100,
+      "enabled": true
+    },
+    {
+      "id": "un-news",
+      "name": "United Nations News",
+      "kind": "rss",
+      "tier": "A",
+      "source_type": "official",
+      "url": "https://news.un.org/feed/subscribe/en/news/all/rss.xml",
+      "language": "en",
+      "poll_interval_seconds": 120,
+      "max_items": 100,
+      "enabled": true
+    },
+    {
+      "id": "bbc-world",
+      "name": "BBC World",
+      "kind": "rss",
+      "tier": "B",
+      "source_type": "mainstream_press",
+      "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+      "language": "en",
+      "poll_interval_seconds": 60,
+      "max_items": 100,
+      "enabled": true
+    },
+    {
+      "id": "al-jazeera",
+      "name": "Al Jazeera",
+      "kind": "rss",
+      "tier": "B",
+      "source_type": "mainstream_press",
+      "url": "https://www.aljazeera.com/xml/rss/all.xml",
+      "language": "en",
+      "poll_interval_seconds": 60,
+      "max_items": 100,
+      "enabled": true
+    },
+    {
+      "id": "google-news-macro",
+      "name": "Google News Macro Search",
+      "kind": "rss",
+      "tier": "D",
+      "source_type": "aggregator",
+      "url": "https://news.google.com/rss/search?q=geopolitics+OR+sanctions+OR+central+bank+OR+inflation+OR+tariff+OR+cryptocurrency&hl=en-US&gl=US&ceid=US:en",
+      "language": "en",
+      "poll_interval_seconds": 120,
+      "max_items": 100,
+      "enabled": true
+    },
+    {
+      "id": "gdelt-macro",
+      "name": "GDELT Global Macro",
+      "kind": "gdelt",
+      "tier": "D",
+      "source_type": "aggregator",
+      "url": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "sanctions OR missile OR ceasefire OR \"central bank\" OR inflation OR tariff OR cryptocurrency",
+      "language": "en",
+      "poll_interval_seconds": 900,
+      "max_items": 100,
+      "enabled": true
+    }
+  ]
+}

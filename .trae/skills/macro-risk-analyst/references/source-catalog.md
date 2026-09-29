@@ -112,3 +112,17 @@ channel.
 Respect access controls, licensing, robots policies, and rate limits. Do not
 bypass paywalls or authentication. When a critical source cannot be inspected,
 record the failure and lower data quality.
+
+## Crypto Knights Collector
+
+When `macro-service` is available, inspect its collector before searching:
+
+1. Read `GET /v1/news/sources` and record unhealthy or stale sources.
+2. Read `GET /v1/news?since=<RFC3339>&limit=500` for the evidence window.
+3. Treat tier `D` Google News and GDELT entries as discovery leads only.
+4. Open the original URL and apply this catalog's corroboration rules before
+   promoting a lead into a confirmed event.
+
+The default collector covers Federal Reserve, ECB, BEA, SEC, UN News, BBC
+World, Al Jazeera, Google News macro search, and GDELT. It stores titles,
+source metadata, timestamps, and original links, not full article bodies.
